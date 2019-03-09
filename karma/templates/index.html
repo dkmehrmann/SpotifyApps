@@ -12,7 +12,19 @@
 
     <h2>{{plist.name}}</h2>
 
-    {{plist.songs['items']}}
+    {% for track in plist.songs['items'] %}
+
+        <a>{{track.track.name}}</a>
+
+        {% for artist in track.track.artists %}
+
+            <a> - {{artist.name}}</a>
+
+        {% endfor %}
+
+        <br>
+
+    {% endfor %}
 
 {% endfor %}
 
