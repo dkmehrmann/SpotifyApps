@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<a type="button" class="btn btn-default" href="/auth">Login</a>
+<a type="button" class="btn btn-default" href="/logout">Logout</a>
+
+<hr>
+
+
+{% for plist in resp %}
+
+    <h2>{{plist.name}}</h2>
+
+    {{plist.songs['items']}}
+
+{% endfor %}
+
+</html>
+
