@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<a type="button" class="btn btn-default" href="/index">Home</a>
+<a type="button" class="btn btn-default" href="/auth">Login</a>
+<a type="button" class="btn btn-default" href="/logout">Logout</a>
+
+<hr>
+
+
+{% for plist in resp %}
+
+    <h2>{{plist.name}}</h2>
+
+    {% for track in plist.songs['items'] %}
+
+
+        <a>{{track.track.name}}</a>
+
+        {% for artist in track.track.artists %}
+            {% if track.is_accused == True %}
+                <a><font color="red">- {{artist.name}}</font></a>
+            {% else %}
+                <a><font>- {{artist.name}}</font></a>
+            {% endif %}
+        {% endfor %}
+
+        <br>
+    {{ track.is_accused }}
+
+    {% endfor %}
+
+{% endfor %}
+
+</html>

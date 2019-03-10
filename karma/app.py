@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, g, render_template, session
+from flask import Flask, request, redirect, g, render_template, session, url_for
 from karma.spotifyAPI import auth, playlists
 
 app = Flask(__name__)
@@ -18,13 +18,13 @@ def callback():
     auth_header = auth.authorize(auth_token)
     session['auth_header'] = auth_header
 
-    return profile()
+    return _playlists()
 
 @app.route("/logout")
 def logout():
     session.pop('auth_header')
 
-    return profile()
+    return _playlists()
 
 def valid_token(resp):
 
@@ -33,13 +33,23 @@ def valid_token(resp):
 
 # ----------------------- Actual Requests -------------------------
 
+@app.route('/')
 @app.route('/index')
-def profile():
+def index():
+
+    return render_template('index.html')
+
+
+
+@app.route('/playlists')
+def _playlists():
     if 'auth_header' in session:
         auth_header = session['auth_header']
 
         playlist_data = playlists.list_songs(auth_header)
 
-        return render_template("index.html", resp=playlist_data)
+        playlist_data = playlists.add_accused(playlist_data)
 
-    return render_template('index.html')
+        return render_template("playlists.html", resp=playlist_data)
+
+    return render_template('playlists.html')
