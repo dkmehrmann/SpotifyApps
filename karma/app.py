@@ -18,7 +18,7 @@ def callback():
     auth_header = auth.authorize(auth_token)
     session['auth_header'] = auth_header
 
-    return _playlists()
+    return redirect(url_for("_playlists"))
 
 @app.route("/logout")
 def logout():
@@ -38,7 +38,6 @@ def valid_token(resp):
 def index():
 
     return render_template('index.html')
-
 
 
 @app.route('/playlists')
