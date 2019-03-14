@@ -20,11 +20,13 @@ def callback():
 
     return redirect(url_for("_playlists"))
 
+
 @app.route("/logout")
 def logout():
     session.pop('auth_header')
 
     return _playlists()
+
 
 def valid_token(resp):
 
