@@ -7,3 +7,10 @@ lots of help with authorization from here: https://github.com/mari-linhares/spot
 # credentials.py
 CLIENT_ID = ""
 CLIENT_SECRET = ""
+
+
+# deploying to AWS
+
+`pip install awsebcli`
+
+`eb init`

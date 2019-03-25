@@ -1,5 +1,5 @@
 from flask import Flask, request, redirect, g, render_template, session, url_for
-from karma.spotifyAPI import auth, playlists
+from spotifyAPI import auth, playlists
 
 app = Flask(__name__)
 app.secret_key = 'some key for session'
@@ -54,3 +54,9 @@ def _playlists():
         return render_template("playlists.html", resp=playlist_data)
 
     return render_template('playlists.html')
+
+if __name__ == "__main__":
+    # Setting debug to True enables debug output. This line should be
+    # removed before deploying a production app.
+    app.debug = True
+    app.run()

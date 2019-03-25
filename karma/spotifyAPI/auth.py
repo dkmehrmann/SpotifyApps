@@ -1,6 +1,6 @@
-from karma.config import SCOPE, SPOTIFY_AUTH_URL, REDIRECT_URI, SPOTIFY_TOKEN_URL
+from config import SCOPE, SPOTIFY_AUTH_URL, REDIRECT_URI, SPOTIFY_TOKEN_URL
 import urllib
-from karma.credentials import CLIENT_ID, CLIENT_SECRET
+from credentials import CLIENT_ID, CLIENT_SECRET
 import requests
 import json
 import base64

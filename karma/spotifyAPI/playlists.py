@@ -1,6 +1,6 @@
-from karma.config import SPOTIFY_API_URL
+from config import SPOTIFY_API_URL
 import requests
-from karma.accused import accused_artists
+from accused import accused_artists
 from flask import url_for
 
 
