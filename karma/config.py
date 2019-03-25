@@ -1,4 +1,5 @@
 # URLS
+import os
 
 SPOTIFY_API_URL = 'https://api.spotify.com/v1'
 SPOTIFY_AUTH_BASE_URL = "https://accounts.spotify.com/{}"
@@ -10,7 +11,9 @@ SCOPE = "playlist-modify-public playlist-modify-private playlist-read-collaborat
 
 
 # need to register this in spotify dev console
-CLIENT_SIDE_URL = "http://127.0.0.1"
-PORT = 5000
-REDIRECT_URI = "{}:{}/callback/".format(CLIENT_SIDE_URL, PORT)
+
+CLIENT_SIDE_URL = os.getenv("MYHOSTNAME")
+
+REDIRECT_URI = "{}/callback/".format(CLIENT_SIDE_URL)
+print(REDIRECT_URI)
 
