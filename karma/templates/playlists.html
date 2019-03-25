@@ -10,11 +10,11 @@
 
 <h1>Accused Artists in your Playlists</h1>
 
-{% for plist in resp %}
+{% for plist in resp['items'] %}
 
     <h2>{{plist.name}}</h2>
 
-    {% for track in plist.songs['items'] %}
+    {% for track in plist['songs']['items'] %}
         {% if track.is_accused == True %}
 
             <a>{{track.track.name}}</a>
@@ -33,7 +33,7 @@
 
 <h1>All Playlists and Tracks</h1>
 
-{% for plist in resp %}
+{% for plist in resp['items'] %}
 
     <h2>{{plist.name}}</h2>
 

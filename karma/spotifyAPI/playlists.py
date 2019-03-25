@@ -1,7 +1,16 @@
 from config import SPOTIFY_API_URL
 import requests
 from accused import accused_artists
-from flask import url_for
+from flask import redirect
+from spotifyAPI import auth
+
+def safe_GET(url, auth_header, **kwargs):
+    resp = requests.get(url, headers=auth_header, **kwargs)
+
+    if resp.status_code == 401:
+        redirect(auth.AUTH_URL)
+
+    return resp.json()
 
 
 def get_playlists(auth_header):
@@ -12,19 +21,7 @@ def get_playlists(auth_header):
 
     # ADD PAGINATION HERE
 
-    return resp.json()
-
-
-def list_playlists(auth_header):
-
-    resp = get_playlists(auth_header)
-
-    out = []
-
-    for plist in resp['items']:
-        out.append({"name": plist['name'], "id": plist['id']})
-
-    return out
+    return resp.json(), resp.status_code
 
 
 def get_songs(auth_header, plist_id):
@@ -38,22 +35,28 @@ def get_songs(auth_header, plist_id):
 
     # ADD PAGINATION HERE
 
-    return resp.json()
+    return resp.json(), resp.status_code
 
 
-def list_songs(auth_header):
+def get_playlist_songs(auth_header):
 
-    plists = list_playlists(auth_header)
+    plists, code = get_playlists(auth_header)
 
-    for x in plists:
-        x['songs'] = get_songs(auth_header, x['id'])
+    if code != 200:
+        return {}, code
 
-    return plists
+    for x in plists['items']:
+        x['songs'], code = get_songs(auth_header, x['id'])
+
+        if code != 200:
+            return plists, code
+
+    return plists, 200
 
 
 def add_accused(plists):
 
-    for plist in plists:
+    for plist in plists['items']:
         for song in plist['songs']['items']:
             song['is_accused'] = False
             for artist in song['track']['artists']:
