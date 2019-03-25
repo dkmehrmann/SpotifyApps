@@ -1,17 +1,17 @@
 from flask import Flask, request, redirect, g, render_template, session, url_for
 from spotifyAPI import auth, playlists
 
-app = Flask(__name__)
-app.secret_key = 'some key for session'
+application = Flask(__name__)
+application.secret_key = 'some key for session'
 
 # ----------------------- AUTH API PROCEDURE -------------------------
 
-@app.route("/auth")
+@application.route("/auth")
 def autho():
     return redirect(auth.AUTH_URL)
 
 
-@app.route("/callback/")
+@application.route("/callback/")
 def callback():
 
     auth_token = request.args['code']
@@ -21,7 +21,7 @@ def callback():
     return redirect(url_for("_playlists"))
 
 
-@app.route("/logout")
+@application.route("/logout")
 def logout():
     session.pop('auth_header')
 
@@ -35,14 +35,14 @@ def valid_token(resp):
 
 # ----------------------- Actual Requests -------------------------
 
-@app.route('/')
-@app.route('/index')
+@application.route('/')
+@application.route('/index')
 def index():
 
     return render_template('index.html')
 
 
-@app.route('/playlists')
+@application.route('/playlists')
 def _playlists():
     if 'auth_header' in session:
         auth_header = session['auth_header']
@@ -58,5 +58,5 @@ def _playlists():
 if __name__ == "__main__":
     # Setting debug to True enables debug output. This line should be
     # removed before deploying a production app.
-    app.debug = True
-    app.run()
+    application.debug = True
+    application.run()

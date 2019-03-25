@@ -1,2 +1,0 @@
-[aws:elasticbeanstalk:container:python]
-WSGIPath:/karma/application.py
