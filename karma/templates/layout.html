@@ -1,14 +1,38 @@
-<!DOCTYPE html>
-<html lang="en">
+<head>
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+    <!-- jQuery library -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <!-- Latest compiled JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
 
 
-<a type="button" class="btn btn-default" href="/auth">Login</a>
-<a type="button" class="btn btn-default" href="/logout">Logout</a>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">Karma</a>
+    </div>
+    <ul class="nav navbar-nav">
+      <li><a href="/index">Home</a></li>
+      <li><a href="/playlists">List Tracks and Playlists</a></li>
+      <li><a href="/playlists/accused">Check Accused</a></li>
+    </ul>
+    <ul class="nav navbar-nav navbar-right">
+      <li><a href="/auth">><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+    </ul>
+  </div>
+</nav>
 
-<hr>
 
-<a type="button" class="btn btn-default" href="/index">Home</a>
-<a type="button" class="btn btn-default" href="/playlists">List Tracks and Playlists</a>
-<a type="button" class="btn btn-default" href="/playlists/accused">Check Accused</a>
-
-<hr>
+<div class="container">
+  <div class="row">
+      {% block content %}
+      {% endblock %}
+  </div>
+</div>

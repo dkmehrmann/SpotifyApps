@@ -1,19 +1,21 @@
-{% include 'layout.html' %}
+{% extends 'layout.html' %}
 
-{% if 'error' in resp %}
+{% block content %}
 
-    {{resp['error']}}
+    {% if 'error' in resp %}
 
-{% else %}
+        {{resp['error']}}
 
-    <h2>Hello, {{resp['display_name']}}!</h2>
+    {% else %}
 
-    {% if resp['images']|length > 0 %}
+        <h2>Hello, {{resp['display_name']}}!</h2>
 
-        <img src={{resp['images'][0]['url']}} alt={{ resp['display_name'] }} width="200" height="200" />
+        {% if resp['images']|length > 0 %}
+
+            <img src={{resp['images'][0]['url']}} alt={{ resp['display_name'] }} width="200" height="200" />
+
+        {% endif %}
 
     {% endif %}
 
-{% endif %}
-
-
+{% endblock %}

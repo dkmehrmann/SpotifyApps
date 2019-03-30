@@ -1,24 +1,27 @@
+{% extends 'layout.html' %}
 
-{% include 'layout.html' %}
+{% block content %}
 
-<h1>{{title}}</h1>
+    <h1>{{title}}</h1>
 
-{% for plist in resp['items'] %}
+    {% for plist in resp['items'] %}
 
-    <h2>{{plist.name}}</h2>
+        <h2>{{plist.name}}</h2>
 
-    {% for track in plist['songs']['items'] %}
+        {% for track in plist['songs']['items'] %}
 
 
-            <a>{{track.track.name}}</a>
+                <a>{{track.track.name}}</a>
 
-            {% for artist in track.track.artists %}
+                {% for artist in track.track.artists %}
 
-                <a> - {{artist.name}}</a>
+                    <a> - {{artist.name}}</a>
 
-            {% endfor %}
-        <br>
+                {% endfor %}
+            <br>
+
+        {% endfor %}
 
     {% endfor %}
 
-{% endfor %}
+{% endblock %}
