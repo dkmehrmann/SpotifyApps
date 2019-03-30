@@ -5,6 +5,7 @@ import requests
 application = Flask(__name__)
 application.secret_key = 'some key for session'
 
+
 # ----------------------- AUTH API PROCEDURE -------------------------
 
 @application.route("/auth")
@@ -26,12 +27,7 @@ def callback():
 def logout():
     session.pop('auth_header')
 
-    return _playlists()
-
-
-def valid_token(resp):
-
-    return resp is not None and not 'error' in resp
+    return redirect(url_for("index"))
 
 
 # ----------------------- Actual Requests -------------------------
@@ -53,19 +49,20 @@ def _playlists():
     if 'auth_header' in session:
         auth_header = session['auth_header']
 
-        playlist_data = playlists.get_playlist_songs(auth_header)
+        playlist_data = playlists.get_all_user_songs(auth_header)
 
         return render_template("playlists.html", resp=playlist_data,
                                title='Tracks and Artists in your Playlists and Library')
 
     return render_template('playlists.html')
 
+
 @application.route('/playlists/accused')
 def _accused():
     if 'auth_header' in session:
         auth_header = session['auth_header']
 
-        playlist_data = playlists.get_playlist_songs(auth_header)
+        playlist_data = playlists.get_all_user_songs(auth_header)
         playlist_data = playlists.add_accused(playlist_data)
 
         for plist in playlist_data['items']:
@@ -77,6 +74,26 @@ def _accused():
                                title='Accused Artists in your Playlists and Library')
 
     return render_template('playlists.html')
+
+
+@application.route('/test')
+def _testendpoint():
+    from flask import jsonify
+    if 'auth_header' in session:
+        auth_header = session['auth_header']
+
+        playlist_data = playlists.get_all_user_songs(auth_header)
+        # playlist_data = playlists.add_accused(playlist_data)
+
+        # for plist in playlist_data['items']:
+        #     songlist = plist['songs']['items']
+        #     songlist = [x for x in songlist if x['is_accused']==True]
+        #     plist['songs']['items'] = songlist
+
+        return jsonify(playlist_data)
+
+    return render_template('playlists.html')
+
 
 if __name__ == "__main__":
     # Setting debug to True enables debug output. This line should be

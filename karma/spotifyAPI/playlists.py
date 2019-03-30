@@ -24,7 +24,7 @@ def get_playlists(auth_header):
     return resp.json()
 
 
-def get_songs(auth_header, plist_id):
+def get_playlist_songs(auth_header, plist_id):
     # https: // api.spotify.com / v1 / playlists / {playlist_id} / tracks
 
     URL = "{}/playlists/{}/tracks".format(SPOTIFY_API_URL, plist_id)
@@ -38,12 +38,23 @@ def get_songs(auth_header, plist_id):
     return resp.json()
 
 
-def get_playlist_songs(auth_header):
+def get_library(auth_header):
+
+    URL = "{}/me/tracks".format(SPOTIFY_API_URL)
+    resp = safe_GET(URL, headers=auth_header)
+
+    return resp.json()
+
+def get_all_user_songs(auth_header):
 
     plists = get_playlists(auth_header)
 
     for x in plists['items']:
-        x['songs'] = get_songs(auth_header, x['id'])
+        x['songs'] = get_playlist_songs(auth_header, x['id'])
+
+    ulib = {'name': 'User Library (saved tracks)', 'songs': get_library(auth_header)}
+
+    plists['items'] = [ulib] + plists['items']
 
     return plists
 

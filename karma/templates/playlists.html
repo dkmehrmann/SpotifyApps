@@ -1,18 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
 
-
-<a type="button" class="btn btn-default" href="/auth">Login</a>
-<a type="button" class="btn btn-default" href="/logout">Logout</a>
-
-<hr>
-
-<a type="button" class="btn btn-default" href="/index">Home</a>
-<a type="button" class="btn btn-default" href="/playlists">List Tracks and Playlists</a>
-<a type="button" class="btn btn-default" href="/playlists/accused">Check Accused</a>
-
-<hr>
-
+{% include 'layout.html' %}
 
 <h1>{{title}}</h1>
 
@@ -35,6 +22,3 @@
     {% endfor %}
 
 {% endfor %}
-
-
-</html>
