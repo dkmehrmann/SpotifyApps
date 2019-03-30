@@ -1,3 +1,15 @@
 {% include 'layout.html' %}
 
-{{resp}}
+{% if 'error' in resp %}
+
+    {{resp['error']}}
+
+{% else %}
+
+    <h2>Hello, {{resp['display_name']}}!</h2>
+
+    <img src={{resp['images'][0]['url']}} alt={{ resp['display_name'] }} width="200" height="200" />
+
+{% endif %}
+
+

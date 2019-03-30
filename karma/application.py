@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, g, render_template, session, url_for
+from flask import Flask, request, redirect, render_template, session, url_for
 from spotifyAPI import auth, playlists
 import requests
 
@@ -20,12 +20,19 @@ def callback():
     auth_header = auth.authorize(auth_token)
     session['auth_header'] = auth_header
 
+    resp = requests.get("https://api.spotify.com/v1/me", headers=auth_header)
+    session['user_data'] = resp.json()
+
     return redirect(url_for("index"))
 
 
 @application.route("/logout")
 def logout():
-    session.pop('auth_header')
+
+    if 'auth_header' in session:
+        session.pop('auth_header')
+    if 'user_data' in session:
+        session.pop('user_data')
 
     return redirect(url_for("index"))
 
@@ -37,11 +44,10 @@ def logout():
 def index():
 
     if 'auth_header' in session:
-        auth_header = session['auth_header']
-        resp = requests.get("https://api.spotify.com/v1/me", headers=auth_header)
-        return render_template('index.html', resp=resp.json())
 
-    return render_template('index.html')
+        return render_template('index.html', resp=session['user_data'])
+
+    return render_template('index.html', resp={'error':'please log in to continue'})
 
 
 @application.route('/playlists')
@@ -54,7 +60,7 @@ def _playlists():
         return render_template("playlists.html", resp=playlist_data,
                                title='Tracks and Artists in your Playlists and Library')
 
-    return render_template('playlists.html')
+    return redirect(url_for("index"))
 
 
 @application.route('/playlists/accused')
@@ -73,7 +79,7 @@ def _accused():
         return render_template("playlists.html", resp=playlist_data,
                                title='Accused Artists in your Playlists and Library')
 
-    return render_template('playlists.html')
+    return redirect(url_for("index"))
 
 
 @application.route('/test')
@@ -82,13 +88,7 @@ def _testendpoint():
     if 'auth_header' in session:
         auth_header = session['auth_header']
 
-        playlist_data = playlists.get_all_user_songs(auth_header)
-        # playlist_data = playlists.add_accused(playlist_data)
-
-        # for plist in playlist_data['items']:
-        #     songlist = plist['songs']['items']
-        #     songlist = [x for x in songlist if x['is_accused']==True]
-        #     plist['songs']['items'] = songlist
+        playlist_data = playlists.get_playlists(auth_header)
 
         return jsonify(playlist_data)
 

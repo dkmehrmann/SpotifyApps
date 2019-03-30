@@ -1,7 +1,7 @@
 from config import SPOTIFY_API_URL
 import requests
 from accused import accused_artists
-from flask import redirect
+from flask import redirect, session
 from spotifyAPI import auth
 
 def safe_GET(url, **kwargs):
@@ -19,9 +19,15 @@ def get_playlists(auth_header):
     USER_PLAYLISTS_ENDPOINT = "{}/{}".format(USER_PROFILE_ENDPOINT, 'playlists')
     resp = safe_GET(USER_PLAYLISTS_ENDPOINT, headers=auth_header)
 
+    plists = resp.json()
+
+    filtered = [x for x in plists['items'] if x['owner']['uri'] == session['user_data']['uri']]
+
+    plists['items'] = filtered
+
     # ADD PAGINATION HERE
 
-    return resp.json()
+    return plists
 
 
 def get_playlist_songs(auth_header, plist_id):
@@ -41,7 +47,8 @@ def get_playlist_songs(auth_header, plist_id):
 def get_library(auth_header):
 
     URL = "{}/me/tracks".format(SPOTIFY_API_URL)
-    resp = safe_GET(URL, headers=auth_header)
+    params = {"fields": "items(track(name, uri, id, artists))"}
+    resp = safe_GET(URL, headers=auth_header, params=params)
 
     return resp.json()
 
