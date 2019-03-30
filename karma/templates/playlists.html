@@ -1,21 +1,27 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<a type="button" class="btn btn-default" href="/index">Home</a>
-<a type="button" class="btn btn-default" href="/playlists">Rerun</a>
+
 <a type="button" class="btn btn-default" href="/auth">Login</a>
 <a type="button" class="btn btn-default" href="/logout">Logout</a>
 
 <hr>
 
-<h1>Accused Artists in your Playlists</h1>
+<a type="button" class="btn btn-default" href="/index">Home</a>
+<a type="button" class="btn btn-default" href="/playlists">List Tracks and Playlists</a>
+<a type="button" class="btn btn-default" href="/playlists/accused">Check Accused</a>
+
+<hr>
+
+
+<h1>{{title}}</h1>
 
 {% for plist in resp['items'] %}
 
     <h2>{{plist.name}}</h2>
 
     {% for track in plist['songs']['items'] %}
-        {% if track.is_accused == True %}
+
 
             <a>{{track.track.name}}</a>
 
@@ -25,37 +31,10 @@
 
             {% endfor %}
         <br>
-        {% endif %}
-    {% endfor %}
-
-{% endfor %}
-
-
-<h1>All Playlists and Tracks</h1>
-
-{% for plist in resp['items'] %}
-
-    <h2>{{plist.name}}</h2>
-
-    {% for track in plist.songs['items'] %}
-
-
-        <a>{{track.track.name}}</a>
-
-        {% for artist in track.track.artists %}
-            {% if track.is_accused == True %}
-                <a><font color="red">- {{artist.name}}</font></a>
-            {% else %}
-                <a><font>- {{artist.name}}</font></a>
-            {% endif %}
-
-
-        {% endfor %}
-
-    <br>
 
     {% endfor %}
 
 {% endfor %}
+
 
 </html>

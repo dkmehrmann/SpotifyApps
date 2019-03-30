@@ -53,15 +53,28 @@ def _playlists():
     if 'auth_header' in session:
         auth_header = session['auth_header']
 
-        playlist_data, code = playlists.get_playlist_songs(auth_header)
+        playlist_data = playlists.get_playlist_songs(auth_header)
 
-        if code == 401:
-            print('hit redirect for token')
-            return redirect(auth.AUTH_URL)
+        return render_template("playlists.html", resp=playlist_data,
+                               title='Tracks and Artists in your Playlists and Library')
 
+    return render_template('playlists.html')
+
+@application.route('/playlists/accused')
+def _accused():
+    if 'auth_header' in session:
+        auth_header = session['auth_header']
+
+        playlist_data = playlists.get_playlist_songs(auth_header)
         playlist_data = playlists.add_accused(playlist_data)
 
-        return render_template("playlists.html", resp=playlist_data)
+        for plist in playlist_data['items']:
+            songlist = plist['songs']['items']
+            songlist = [x for x in songlist if x['is_accused']==True]
+            plist['songs']['items'] = songlist
+
+        return render_template("playlists.html", resp=playlist_data,
+                               title='Accused Artists in your Playlists and Library')
 
     return render_template('playlists.html')
 
