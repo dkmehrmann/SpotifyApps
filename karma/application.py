@@ -52,7 +52,7 @@ def index():
 
 @application.route('/playlists')
 def _playlists():
-    if 'auth_header' in session:
+    if 'auth_header' in session and 'user_data' in session:
         auth_header = session['auth_header']
 
         playlist_data = playlists.get_all_user_songs(auth_header)
@@ -65,7 +65,7 @@ def _playlists():
 
 @application.route('/playlists/accused')
 def _accused():
-    if 'auth_header' in session:
+    if 'auth_header' in session and 'user_data' in session:
         auth_header = session['auth_header']
 
         playlist_data = playlists.get_all_user_songs(auth_header)
@@ -85,7 +85,7 @@ def _accused():
 @application.route('/test')
 def _testendpoint():
     from flask import jsonify
-    if 'auth_header' in session:
+    if 'auth_header' in session and 'user_data' in session:
         auth_header = session['auth_header']
 
         playlist_data = playlists.get_playlists(auth_header)
