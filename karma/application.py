@@ -43,7 +43,7 @@ def logout():
 @application.route('/index')
 def index():
 
-    if 'auth_header' in session:
+    if 'auth_header' in session and 'user_data' in session:
 
         return render_template('index.html', resp=session['user_data'])
 
