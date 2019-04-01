@@ -1,9 +1,15 @@
 from flask import Flask, request, redirect, render_template, session, url_for
 from spotifyAPI import auth, playlists
 import requests
+from requests import exceptions
 
 application = Flask(__name__)
 application.secret_key = 'some key for session'
+
+
+def handle_error(e):
+
+    return render_template('index.html', resp={'error': {'msg': e.strerror, 'code': e.errno}})
 
 
 # ----------------------- AUTH API PROCEDURE -------------------------
@@ -55,7 +61,11 @@ def _playlists():
     if 'auth_header' in session and 'user_data' in session:
         auth_header = session['auth_header']
 
-        playlist_data = playlists.get_all_user_songs(auth_header)
+        try:
+            playlist_data = playlists.get_all_user_songs(auth_header)
+        except exceptions.HTTPError as e:
+            return handle_error(e)
+
 
         return render_template("playlists.html", resp=playlist_data,
                                title='Tracks and Artists in your Playlists and Library')
@@ -68,7 +78,11 @@ def _accused():
     if 'auth_header' in session and 'user_data' in session:
         auth_header = session['auth_header']
 
-        playlist_data = playlists.get_all_user_songs(auth_header)
+        try:
+            playlist_data = playlists.get_all_user_songs(auth_header)
+        except exceptions.HTTPError as e:
+            return handle_error(e)
+
         playlist_data = playlists.add_accused(playlist_data)
 
         for plist in playlist_data['items']:

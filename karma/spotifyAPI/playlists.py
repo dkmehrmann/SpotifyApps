@@ -1,14 +1,15 @@
 from config import SPOTIFY_API_URL
 import requests
 from accused import accused_artists
-from flask import redirect, session
-from spotifyAPI import auth
+from flask import session
+from requests import exceptions
+
 
 def safe_GET(url, **kwargs):
     resp = requests.get(url, **kwargs)
 
-    if resp.status_code == 401:
-        redirect(auth.AUTH_URL)
+    if resp.status_code != 200:
+        raise exceptions.HTTPError(resp.status_code, "error from spotify client")
 
     return resp
 
@@ -77,4 +78,3 @@ def add_accused(plists):
                     break
 
     return plists
-
