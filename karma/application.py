@@ -56,35 +56,18 @@ def index():
     return render_template('index.html', resp={'error':'please log in to continue'})
 
 
-@application.route('/playlists', methods=['GET', 'POST'])
+@application.route('/playlists')
 def _playlists():
     if 'auth_header' in session and 'user_data' in session:
         auth_header = session['auth_header']
 
-        if request.method == "GET":
+        try:
+            playlist_data = playlists.get_all_user_songs(auth_header)
+        except exceptions.HTTPError as e:
+            return handle_error(e)
 
-            try:
-                playlist_data = playlists.get_all_user_songs(auth_header)
-                # session['user_playlists'] = playlist_data
-            except exceptions.HTTPError as e:
-                return handle_error(e)
-
-
-            return render_template("playlists.html", resp=playlist_data,
-                                   title='Tracks and Artists in your Playlists and Library')
-
-        if request.method == "POST":
-            artist_list = request.form.getlist('artists')
-            # playlist_data = session['user_playlists']
-
-            for plist in playlist_data['items']:
-                songlist = plist['songs']['items']
-                songlist = [x for x in songlist if len(set(x['track']['artists']) & set(artist_list)) > 0]
-                plist['songs']['items'] = songlist
-
-            return render_template("playlists.html", resp=playlist_data,
-                                   title='Tracks and Artists in your Playlists and Library')
-
+        return render_template("playlists.html", resp=playlist_data,
+                               title='Tracks and Artists in your Playlists and Library')
 
     return redirect(url_for("index"))
 
@@ -92,26 +75,9 @@ def _playlists():
 @application.route('/playlists/accused', methods=['GET', 'POST'])
 def _accused():
     if 'auth_header' in session and 'user_data' in session:
-        auth_header = session['auth_header']
 
-        # try:
-        #     playlist_data = playlists.get_all_user_songs(auth_header)
-        # except exceptions.HTTPError as e:
-        #     return handle_error(e)
-
-        # playlist_data = playlists.add_accused(playlist_data)
-
-        # for plist in playlist_data['items']:
-        #     songlist = plist['songs']['items']
-        #     songlist = [x for x in songlist if x['is_accused']==True]
-        #     plist['songs']['items'] = songlist
-
-        if request.method == "POST":
-            thing = request.form.getlist('artists')
-
-            return jsonify(thing)
-        return render_template("playlists.html", resp=playlist_data,
-                               title='Accused Artists in your Playlists and Library')
+        ## PASS FOR NOW, but this is where we'll actually delete the songs??
+        return redirect(url_for("index"))
 
     return redirect(url_for("index"))
 
