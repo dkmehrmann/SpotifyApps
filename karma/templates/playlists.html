@@ -2,8 +2,9 @@
 
 {% block content %}
 
-    <h1>{{title}}</h1>
+<h1>{{title}}</h1>
 
+<!-- This is selectize.js and makes the selector object -->
 
 <form action="#">
     <div class="demo">
@@ -42,13 +43,13 @@
 </form>
 
 
-
-
+<!-- empty div to populate -->
 
 <div id="mylist">
 
 </div>
 
+<!-- the actual js code that populates the list -->
 
 <script>
 var resp = {{ resp | tojson }};
