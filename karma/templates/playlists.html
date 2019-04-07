@@ -4,24 +4,94 @@
 
     <h1>{{title}}</h1>
 
-    {% for plist in resp['items'] %}
 
-        <h2>{{plist.name}}</h2>
-
-        {% for track in plist['songs']['items'] %}
-
-
-                <a>{{track.track.name}}</a>
-
-                {% for artist in track.track.artists %}
-
-                    <a> - {{artist.name}}</a>
-
+<form action="#">
+    <div class="demo">
+        <h2>&lt;select multiple&gt;</h2>
+        <div class="control-group">
+            <label for="select-artists">Artists:</label>
+            <select id="select-artists" name="artists[]" multiple class="demo-default" style="width:50%" placeholder="Select artists...">
+                <option value="">Select artists...</option>
+                    {% for plist in resp['items'] %}
+                        {% for track in plist['songs']['items'] %}
+                            {% for artist in track.track.artists %}
+                                <option value="{{artist.name}}">{{artist.name}}</option>
+                        {% endfor %}
+                    {% endfor %}
                 {% endfor %}
-            <br>
+            </select>
+        </div>
 
-        {% endfor %}
+        <div class="buttons">
+            <input type="button" value="Go!" id="button-test">
+        </div>
+        <script>
+        var $select = $('#select-artists').selectize({
+            maxItems: 50
+        });
 
-    {% endfor %}
+        var selectizeControl = $select[0].selectize
+
+        $('#button-test').on('click', function() {
+            var myartists = selectizeControl.getValue();
+            console.log(myartists)
+            dispSongs(myartists)
+        });
+        </script>
+    </div>
+</form>
+
+
+
+
+
+<div id="mylist">
+
+</div>
+
+
+<script>
+var resp = {{ resp | tojson }};
+
+function dispSongs(myartists)
+{
+
+    var divtag = document.getElementById("mylist");
+    divtag.innerHTML = "";
+
+    console.log(myartists)
+    var plists = resp['items']
+    for (var i = 0; i < plists.length; i++) {
+
+        var plist = plists[i];
+        var h = document.createElement("H2");
+        var t = document.createTextNode(plist.name);
+        h.appendChild(t);
+        divtag.appendChild(h);
+
+        var tracks = plist['songs']['items']
+
+        for (var j = 0; j < tracks.length; j++) {
+            var track = tracks[j]
+            var artists = track['track']['artists']
+
+            for  (var k=0; k < artists.length; k++){
+                var artist = artists[k]
+
+                if ((myartists.includes(artist.name)) || myartists.length==0){
+                    var z = document.createElement("p");
+                    var y = document.createTextNode(track.track.name + " - " + artist.name);
+                    z.appendChild(y);
+                    divtag.appendChild(z);
+                }
+
+
+
+            }
+        }
+    }
+}
+
+</script>
 
 {% endblock %}
